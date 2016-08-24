@@ -1,0 +1,7 @@
+{% block content %}
+    <h1>Encrypted Message</h1>
+    <form method="POST" class="msgenc">{% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Save</button>
+    </form>
+{% endblock %}

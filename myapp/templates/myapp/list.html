@@ -1,0 +1,55 @@
+{% extends "registration/registration_base.html" %}
+{% load i18n %}
+<div class="container">
+{% block title %}{% trans "File Management" %}{% endblock %}
+
+{% block content %}
+<hr>
+        <!-- List of uploaded documents -->
+          {% if documents%}
+          <div id="listfiles">
+            <form action="encc" method="POST">
+            {% csrf_token %}
+            <ul>
+                {% for document in documents %}
+                    {% if document.uploader|stringformat:"s" == user.id|stringformat:"s" %}
+                        <li>
+                        <!-- <input type = "radio" value="{{ document.docfile.url }}" name="filename" id="{{ document.docfile.url}}"><label for="{{ document.docfile.url}}"><a href="{{ document.docfile.url }}">{{ document.docfile.name }}</a></label> -->
+                            <input type="radio" id="{{ document.docfile.url }}" value="{{ document.docfile.url }}" name="filename" >
+                            <label for="{{ document.docfile.url }}"><a href="{{document.docfile.url}}">{{ document.docfile.name }}</a></label>
+                            <div class="check"><div class="inside"></div></div>
+                        </li>
+
+                    {% endif %}
+                {% endfor %}
+            </ul>
+            <label>Public key for Encryption : </label>
+            <input type="text" name="publickey" value="HisPublicKey">
+            <input type="submit" class="btn btn-primary" name="encrypt" value="Encrypt" >
+            <input type="submit" class="btn btn-primary" name="decrypt" value="Decrypt" style="margin-left: 30px;">
+            <input type="submit" class="btn btn-primary" name="delete" value="Delete" style="margin-left: 30px;">
+            </form>
+        </div>
+        {% else %}
+            <p>No documents.</p>
+        {% endif %}
+<hr>
+        <!-- Upload form. Note enctype attribute! -->
+        <form action="" method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            <!-- <p><input type = "text" name = "uploader" value = {{ user.username }}></p> -->
+            <p>{{ form.non_field_errors }}</p>
+            <h2>Upload Files</h2>
+            <p>{{ form.docfile.help_text }}</p>
+
+            <p>
+                {{ form.docfile.errors }}
+                {{ form.docfile }}
+            </p>
+
+            <p><input type="submit" class="btn btn-primary" value="Upload"/></p>
+
+
+        </form>
+{% endblock %}
+</div>
